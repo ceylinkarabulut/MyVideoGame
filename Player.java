@@ -1,37 +1,38 @@
+import java.util.ArrayList;
+import java.util.List;
+
 // Player class extending Character
 public class Player extends Character {
-    private Inventory inventory;
+    private final Inventory inventory;
+    private final List<Quest> acceptedQuests = new ArrayList<>();
     private int gold;
-    private Quest[] acceptedQuests;
-    private int questCount;
 
     public Player(String name, int maxHealth, int level) {
         super(name, maxHealth, level);
         this.inventory = new Inventory();
         this.gold = 100;
-        this.acceptedQuests = new Quest[10];
-        this.questCount = 0;
     }
 
     public void acceptQuest(Quest quest) {
-        if (questCount < acceptedQuests.length) {
-            quest.accept();
-            acceptedQuests[questCount] = quest;
-            questCount++;
-            System.out.println(name + " accepted quest: " + quest.getTitle());
-        }
+        quest.accept();
+        acceptedQuests.add(quest);
+        System.out.println(name + " accepted quest: " + quest.getTitle());
     }
 
     public void completeQuest(Quest quest) {
-        for (int i = 0; i < questCount; i++) {
-            if (acceptedQuests[i].getId().equals(quest.getId())) {
-                acceptedQuests[i].complete();
+        for (Quest accepted : acceptedQuests) {
+            if (accepted.getId().equals(quest.getId())) {
+                accepted.complete();
                 this.gold += quest.getReward();
                 this.gainExperience(quest.getReward() * 10);
                 System.out.println(name + " completed quest: " + quest.getTitle());
                 break;
             }
         }
+    }
+
+    public void equipWeapon(Item weapon) {
+        this.strength += weapon.getEffectAmount();
     }
 
     public void displayStatus() {
@@ -49,6 +50,5 @@ public class Player extends Character {
     public int getGold() { return gold; }
     public void addGold(int amount) { this.gold += amount; }
     public void removeGold(int amount) { this.gold -= amount; }
-    public Quest[] getAcceptedQuests() { return acceptedQuests; }
-    public int getQuestCount() { return questCount; }
+    public List<Quest> getAcceptedQuests() { return acceptedQuests; }
 }

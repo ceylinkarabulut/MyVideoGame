@@ -1,9 +1,10 @@
 // Quest management
 public class Quest {
-    private String id;
-    private String title;
-    private String description;
-    private int reward;
+    private final String id;
+    private final String title;
+    private final String description;
+    private final int reward;
+    private final String requiredItem; // item that must be in inventory to turn this in, or null
     private QuestStatus status;
 
     public enum QuestStatus {
@@ -11,10 +12,15 @@ public class Quest {
     }
 
     public Quest(String id, String title, String description, int reward) {
+        this(id, title, description, reward, null);
+    }
+
+    public Quest(String id, String title, String description, int reward, String requiredItem) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.reward = reward;
+        this.requiredItem = requiredItem;
         this.status = QuestStatus.AVAILABLE;
     }
 
@@ -35,6 +41,7 @@ public class Quest {
     public String getTitle() { return title; }
     public String getDescription() { return description; }
     public int getReward() { return reward; }
+    public String getRequiredItem() { return requiredItem; }
     public QuestStatus getStatus() { return status; }
 
     @Override

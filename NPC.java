@@ -1,7 +1,11 @@
+import java.util.ArrayList;
+import java.util.List;
+
 // Non-player character class
 public class NPC {
-    private String name;
-    private String dialogue;
+    private final String name;
+    private final String dialogue;
+    private final List<Item> shopItems = new ArrayList<>();
     private Quest quest;
 
     public NPC(String name, String dialogue) {
@@ -20,6 +24,14 @@ public class NPC {
 
     public Quest getQuest() {
         return quest;
+    }
+
+    public void addShopItem(Item item) {
+        shopItems.add(item);
+    }
+
+    public List<Item> getShopItems() {
+        return shopItems;
     }
 
     // Getters

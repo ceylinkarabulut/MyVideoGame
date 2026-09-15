@@ -31,7 +31,7 @@ public abstract class Character {
 
     public void gainExperience(int exp) {
         this.experience += exp;
-        if (this.experience >= level * 100) {
+        while (this.experience >= level * 100) {
             levelUp();
         }
     }

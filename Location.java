@@ -1,52 +1,65 @@
+import java.util.ArrayList;
+import java.util.List;
+
 // Location/Area class
 public class Location {
-    private String id;
-    private String name;
-    private String description;
-    private NPC[] npcs;
-    private int npcCount;
-    private Location[] connectedLocations;
-    private int connectionCount;
+    private final String id;
+    private final String name;
+    private final String description;
+    private final List<NPC> npcs = new ArrayList<>();
+    private final List<Location> connectedLocations = new ArrayList<>();
+    private Enemy enemy;
 
     public Location(String id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.npcs = new NPC[5];
-        this.npcCount = 0;
-        this.connectedLocations = new Location[4];
-        this.connectionCount = 0;
     }
 
     public void addNPC(NPC npc) {
-        if (npcCount < npcs.length) {
-            npcs[npcCount] = npc;
-            npcCount++;
-        }
+        npcs.add(npc);
     }
 
     public void connectLocation(Location location) {
-        if (connectionCount < connectedLocations.length) {
-            connectedLocations[connectionCount] = location;
-            connectionCount++;
+        connectedLocations.add(location);
+    }
+
+    public NPC findNPC(String npcName) {
+        for (NPC npc : npcs) {
+            if (npc.getName().equalsIgnoreCase(npcName)) return npc;
         }
+        return null;
+    }
+
+    public Location findConnection(String locationName) {
+        for (Location location : connectedLocations) {
+            if (location.getName().equalsIgnoreCase(locationName)
+                    || location.getId().equalsIgnoreCase(locationName)) {
+                return location;
+            }
+        }
+        return null;
     }
 
     public void displayLocation() {
         System.out.println("\n=== " + name + " ===");
         System.out.println(description);
 
-        if (npcCount > 0) {
+        if (enemy != null && enemy.isAlive()) {
+            System.out.println("\nA " + enemy.getName() + " blocks your path! (type 'fight')");
+        }
+
+        if (!npcs.isEmpty()) {
             System.out.println("\nNPCs here:");
-            for (int i = 0; i < npcCount; i++) {
-                System.out.println("- " + npcs[i].getName());
+            for (NPC npc : npcs) {
+                System.out.println("- " + npc.getName());
             }
         }
 
-        if (connectionCount > 0) {
+        if (!connectedLocations.isEmpty()) {
             System.out.println("\nConnected Locations:");
-            for (int i = 0; i < connectionCount; i++) {
-                System.out.println("- " + connectedLocations[i].getName());
+            for (Location location : connectedLocations) {
+                System.out.println("- " + location.getName());
             }
         }
     }
@@ -55,8 +68,8 @@ public class Location {
     public String getId() { return id; }
     public String getName() { return name; }
     public String getDescription() { return description; }
-    public NPC[] getNPCs() { return npcs; }
-    public int getNPCCount() { return npcCount; }
-    public Location[] getConnectedLocations() { return connectedLocations; }
-    public int getConnectionCount() { return connectionCount; }
+    public List<NPC> getNPCs() { return npcs; }
+    public List<Location> getConnectedLocations() { return connectedLocations; }
+    public Enemy getEnemy() { return enemy; }
+    public void setEnemy(Enemy enemy) { this.enemy = enemy; }
 }

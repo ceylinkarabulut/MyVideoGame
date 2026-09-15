@@ -1,7 +1,7 @@
 // Combat system
 public class Combat {
-    private Character attacker;
-    private Character defender;
+    private final Character attacker;
+    private final Character defender;
     private int round;
 
     public Combat(Character attacker, Character defender) {
@@ -42,7 +42,7 @@ public class Combat {
 
     private int calculateDamage(Character attacker, Character defender) {
         int baseDamage = attacker.getStrength();
-        int variance = (int)(Math.random() * 5) - 2; // -2 to +2
+        int variance = (int) (Math.random() * 5) - 2; // -2 to +2
         int defense = defender.getDefense();
         return Math.max(1, baseDamage + variance - defense / 3);
     }
@@ -51,10 +51,25 @@ public class Combat {
         System.out.println("\n=== Combat End ===");
         if (attacker.isAlive()) {
             System.out.println(attacker.getName() + " wins!");
-            attacker.gainExperience(50);
+            awardVictory(attacker, defender);
         } else {
             System.out.println(defender.getName() + " wins!");
-            defender.gainExperience(50);
+            awardVictory(defender, attacker);
+        }
+    }
+
+    private void awardVictory(Character winner, Character loser) {
+        int exp = 50;
+        int gold = 0;
+        if (loser instanceof Enemy) {
+            Enemy enemy = (Enemy) loser;
+            exp = enemy.getExpReward();
+            gold = enemy.getGoldReward();
+        }
+        winner.gainExperience(exp);
+        if (winner instanceof Player && gold > 0) {
+            ((Player) winner).addGold(gold);
+            System.out.println(winner.getName() + " loots " + gold + " gold!");
         }
     }
 
